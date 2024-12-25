@@ -1,3 +1,6 @@
+import * as nodedns from 'node:dns';
+nodedns.setDefaultResultOrder('ipv4first');
+
 import { PostgresDatabaseAdapter } from "@ai16z/adapter-postgres";
 import { SqliteDatabaseAdapter } from "@ai16z/adapter-sqlite";
 import { DirectClientInterface } from "@ai16z/client-direct";
@@ -33,6 +36,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { character } from "./character.ts";
 import type { DirectClient } from "@ai16z/client-direct";
+import {stxBalanceChecker} from "./StxBalanceChecker.ts";
 
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = path.dirname(__filename); // get the name of the directory
@@ -223,7 +227,9 @@ export function createAgent(
       character.settings.secrets?.WALLET_PUBLIC_KEY ? solanaPlugin : null,
     ].filter(Boolean),
     providers: [],
-    actions: [],
+    actions: [
+        stxBalanceChecker
+    ],
     services: [],
     managers: [],
     cacheManager: cache,
